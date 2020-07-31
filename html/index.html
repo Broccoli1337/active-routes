@@ -22,30 +22,9 @@
        <button id="clone_button">New Window</button>
     </span>
     <ul>
-      <li><a href="#overall">Traffic</a></li>
       <li><a href="#cache">Active Prefixes</a></li>
-      <li><a href="#cache6">Active Prefixes (IPv6)</a></li>
-      <li><a href="#resources">Resources</a></li>
       <li><a href="#help">Help</a></li>
     </ul>
-    <div id="overall">
-      <div id="overall-acc">
-        <div>
-          <h3>Destinations</h3>
-            <div>
-              <div id="toppaths" class="trend"></div>
-              <div id="topasns" class="trend"></div>
-              <div id="toppeers" class="trend"></div>
-            </div>
-        </div>
-        <div>
-          <h3>Sources</h3>
-          <div>
-             <div id="topsrcasns" class="trend"></div>
-          </div>
-        </div>
-      </div>
-    </div>
     <div id="cache">
       <div id="cache-acc">
         <div>
@@ -69,50 +48,6 @@
               <div id="cachedprefixchanges" class="trend"></div>
               <div id="cachedhitrate" class="trend"></div>
             </div>
-        </div>
-      </div>
-    </div>
-    <div id="cache6">
-      <div id="cache6-acc">
-        <div>
-          <h3>RIB</h3>
-          <div>
-            <div id="prefixes6" class="trend"></div>
-            <div id="prefixchanges6" class="trend"></div>
-          </div>
-        </div>
-        <div>
-          <h3>Active</h3>
-          <div>
-            <div id="activeprefixes6" class="trend"></div>
-            <div id="activecoverage6" class="trend"></div>
-          </div>
-        </div>
-        <div>
-          <h3>Cache</h3>
-            <div>
-              <div id="cachedprefixes6" class="trend"></div>
-              <div id="cachedprefixchanges6" class="trend"></div>
-              <div id="cachedhitrate6" class="trend"></div>
-            </div>
-        </div>
-      </div>
-    </div>
-    <div id="resources">
-      <div id="resources-acc">
-        <div>
-          <h3>Switch</h3>
-          <div>
-            <div id="cpu" class="trend"></div>
-            <div id="acl" class="trend"></div>
-            <div id="fwd" class="trend" style="height:170px"></div>
-          </div>
-        </div>
-        <div>
-          <h3>Router</h3>
-          <div>
-            <div id="routercpu" class="trend"></div>
-          </div>
         </div>
       </div>
     </div>
@@ -142,10 +77,13 @@
                 <tr class="even"><td>arm.target.as</td><td></td><td>Local AS number to advertise to target router</td></tr>
                 <tr class="odd"><td>arm.target.id</td><td></td><td>Local identifier (e.g. 0.0.0.2) to advertise to target router</td></tr>
                 <tr class="even"><td>arm.target.prefixes</td><td>20000</td><td>Number of IP prefixes to push to target router</td></tr>
-                <tr class="odd"><td>argm.target.prefixes6</td><td>20000</td><td>Mumber of IPv6 prefixes to push to target router</td></tr>
+                <tr class="odd"><td>arm.target.prefixes6</td><td>20000</td><td>Mumber of IPv6 prefixes to push to target router</td></tr>
                 <tr class="even"><td>arm.target.minvalue</td><td>0</td><td>Traffic threshold before pushing prefix</td></tr>
-                <tr class="odd"><td>arm.sflow.ip</td><td></td><td>sFlow source for traffic data (default is arm.reflector.ip)</td></tr>
-                <tr class="even"><td>arm.sflow.t</td><td>20</td><td>Traffic moving average duration in seconds</td></tr>
+                <tr class="odd"><td>arm.target.updateInterval</td><td>6</td><td>Set the update interval for sending top prefixes to the target router</td></tr>
+                <tr class="even"><td>arm.target.period</td><td>24h</td><td>Period used to select top prefixes</td></tr>
+                <tr class="odd"><td>arm.target.mail_to</td><td></td><td>Address where to send updates mails</td></tr>
+                <tr class="even"><td>arm.sflow.ip</td><td></td><td>sFlow source for traffic data (default is arm.reflector.ip)</td></tr>
+                <tr class="odd"><td>arm.sflow.t</td><td>20</td><td>Traffic moving average duration in seconds</td></tr>
               </tbody>
             </table>
           </div>

@@ -11,9 +11,30 @@ var bgpPrevRemoves = 0;
 var cachePrevAdds = 0;
 var cachePrevRemoves = 0;
 
+var d = new Date();
+var min = -1;
+var updateInterval = getSystemProperty("arm.target.updateInterval") || 6;
+
+//Update the table at start
+
+let output = runCmd(['/bin/rm','./app/load_balancing/scripts/table.log']); //Remove old table
+let result = runCmd(['/bin/python3','./app/load_balancing/scripts/update_networks.py']);
+logInfo("Updating prefixes");
+logInfo(result.stdout);
+
+
 setIntervalHandler(function(now) {
+
   let config = sharedGet('arm_config');
   if(!config || !config.reflectorIP) return;
+
+  let d = new Date(); //Get the current hour
+
+  if(d.getHours() % updateInterval == 0 && d.getMinutes()  == 0 && d.getSeconds() == 0){
+	   //Update the routing table
+     let result = runCmd(['/bin/python3','./app/load_balancing/scripts/update_networks.py']);
+     logInfo("Updating prefixes");
+  }
 
   let top = bgpTopPrefixes(config.reflectorIP,config.targetPrefixes,config.targetMinValue,'egress',true,1,true);
   if(!top || !top.hasOwnProperty('topPrefixes')) return;
@@ -42,18 +63,11 @@ setIntervalHandler(function(now) {
         if(installed[entry.prefix]) hit += entry.value;
         else if(recentlyRemoved[entry.prefix]) missRecent += entry.value;
         if(entry.parentprefix) covered++;
-        if(bgpAddRoute(config.targetIP,entry)) {
-          installed[entry.prefix] = now; 
-        }
       }
       recentlyRemoved = {};
       for(let prefix in installed) {
         let time = installed[prefix];
         if(time === now) continue;
-        if(bgpRemoveRoute(config.targetIP,prefix)) {
-          delete installed[prefix];
-          recentlyRemoved[prefix] = now;
-        } 
       }
 
       stats['cache-prefixes-added'] = tgt.pushedPrefixesAdded - cachePrevAdds;
@@ -62,7 +76,7 @@ setIntervalHandler(function(now) {
       cachePrevRemoves = tgt.pushedPrefixesRemoved;
       stats['cache-prefixes'] = tgt.pushedPrefixesAdded - tgt.pushedPrefixesRemoved;
       stats['cache-hitrate'] = 100 * hit / Math.max(top.valueTotal,1);
-      stats['cache-missrecent'] = 100 * missRecent / Math.max(top.valueTotal,1);  
+      stats['cache-missrecent'] = 100 * missRecent / Math.max(top.valueTotal,1);
     } else {
       stats['cache-prefixes-added'] = 0;
       stats['cache-prefixes-removed'] = 0;
@@ -83,7 +97,7 @@ setIntervalHandler(function(now) {
       else if(recentlyRemoved[entry.prefix]) missRecent += entry.value;
       if(entry.parentprefix) covered++;
       if(!installed[entry.prefix]) added++;
-      installed[entry.prefix] = now; 
+      installed[entry.prefix] = now;
     }
     recentlyRemoved = {};
     for(let prefix in installed) {
